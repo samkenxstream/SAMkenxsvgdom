@@ -30,22 +30,34 @@ const ParentNode = {
     return this.query(query, this, true)[0] || null
   },
 
-  prepend (nodes) {
+  closest (query) {
+    const cssQuery = new CssQuery(query)
+    let node = this
+    while (node) {
+      if (cssQuery.matches(node, this)) {
+        return node
+      }
+      node = node.parentNode
+    }
+    return null
+  },
+
+  prepend (...nodes) {
     const node = nodesToNode(nodes, this.ownerDocument)
 
     this.insertBefore(node, this.firstChild)
   },
 
-  append (nodes) {
+  append (...nodes) {
     const node = nodesToNode(nodes, this.ownerDocument)
     this.appendChild(node)
   },
 
-  replaceChildren (nodes) {
+  replaceChildren (...nodes) {
     while (this.firstChild) {
       this.removeChild(this.firstChild)
     }
-    this.append(nodes)
+    this.append(...nodes)
   }
 }
 
